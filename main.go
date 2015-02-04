@@ -69,6 +69,7 @@ func draw() {
 	// test collisions
 
 	eng.Render(scene.Node, now)
+	eng.Render(lvl.node.Node, now)
 	debug.DrawFPS()
 }
 
@@ -99,21 +100,6 @@ func loadScene() {
 
 	// level
 	lvl = loadLevel(1)
-	// tiles
-	for i := range lvl.tiles {
-		for j := range lvl.tiles[i] {
-			tile := lvl.tiles[i][j]
-			o := &fsm.Object{
-				X:      float32(32 * j),
-				Y:      float32(32 * i),
-				Width:  32,
-				Height: 32,
-				Sprite: tiles[tile],
-				Dead:   tile == tileEmpty,
-			}
-			o.Register(scene, eng)
-		}
-	}
 }
 
 const (

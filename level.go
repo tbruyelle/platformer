@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/tbruyelle/fsm"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -12,6 +13,8 @@ import (
 type level struct {
 	num   int
 	tiles [][]rune
+	objs  [][]*fsm.Object
+	node  *fsm.Object
 }
 
 func loadLevel(num int) *level {
@@ -30,6 +33,24 @@ func loadLevel(num int) *level {
 		l.tiles[i] = make([]rune, len(line))
 		for j, c := range line {
 			l.tiles[i][j] = c
+		}
+	}
+	// create the objects from the tiles
+	l.node = &fsm.Object{X: 0, Y: 0, Width: float32(len(l.tiles[0])*32 + 2), Height: float32(len(l.tiles)*32 + 2)}
+	l.node.Register(nil, eng)
+	l.objs = make([][]*fsm.Object, len(l.tiles))
+	for i, line := range l.tiles {
+		l.objs[i] = make([]*fsm.Object, len(line))
+		for j, tile := range line {
+			o := &fsm.Object{
+				X:      float32(32 * j),
+				Y:      float32(32 * i),
+				Width:  32,
+				Height: 32,
+				Sprite: tiles[tile],
+				Dead:   tile == tileEmpty,
+			}
+			o.Register(l.node, eng)
 		}
 	}
 	return l
