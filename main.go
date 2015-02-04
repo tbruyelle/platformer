@@ -5,6 +5,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/tbruyelle/fsm"
@@ -90,6 +91,7 @@ func loadScene() {
 		Width:  float32(geom.Width),
 		Height: float32(geom.Height),
 	}
+	log.Println("Window", bg.Width, bg.Height)
 	bg.Register(scene, eng)
 	bg.Sprite = fsm.SubTex(fsm.MustLoadTexture(eng, "bg0.png"), 0, 0, 1920, 1080)
 
@@ -121,6 +123,7 @@ const (
 	tileWallR
 	tileWallE
 	tileCeiling
+	tileBall
 )
 
 func loadTiles() map[rune]sprite.SubTex {
@@ -128,6 +131,7 @@ func loadTiles() map[rune]sprite.SubTex {
 	return map[rune]sprite.SubTex{
 		tileEmpty: sprite.SubTex{},
 		tileFloor: fsm.SubTex(t, 32, 32, 64, 64),
-		tilePlain: fsm.SubTex(t, 32, 64, 64, 76),
+		tilePlain: fsm.SubTex(t, 32, 64, 64, 96),
+		tileBall:  fsm.SubTex(t, 96, 0, 128, 32),
 	}
 }
