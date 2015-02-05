@@ -34,3 +34,11 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 	}
 
 }
+
+func followPlayer(o *fsm.Object, t clock.Time) {
+	if o.Time == 0 {
+		o.Time = t
+	}
+	f := clock.Linear(o.Time, o.Time+50, t)
+	o.Tx = -100 * f
+}

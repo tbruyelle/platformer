@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/tbruyelle/fsm"
 	"io/ioutil"
 	"log"
 	"strings"
 
+	"github.com/tbruyelle/fsm"
+
 	"golang.org/x/mobile/app"
-	"golang.org/x/mobile/sprite/clock"
 )
 
 const (
@@ -39,6 +39,7 @@ func loadLevel(num int) *level {
 			Y:      0,
 			Width:  1,
 			Height: 1,
+			Action: fsm.ActionFunc(followPlayer),
 		},
 	}
 
@@ -89,7 +90,4 @@ func loadLevel(num int) *level {
 		}
 	}
 	return l
-}
-
-func followPlayer(o *fsm.Object, t clock.Time) {
 }
