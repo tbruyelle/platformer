@@ -33,11 +33,12 @@ var (
 	start     = time.Now()
 	lastClock = clock.Time(-1)
 
-	eng   = glsprite.Engine()
-	scene *fsm.Object
-	tiles map[rune]sprite.SubTex
-	objs  Objs
-	lvl   *level
+	eng    = glsprite.Engine()
+	scene  *fsm.Object
+	tiles  map[rune]sprite.SubTex
+	objs   Objs
+	lvl    *level
+	player *fsm.Object
 )
 
 func main() {
@@ -102,20 +103,9 @@ func loadScene() {
 	lvl = loadLevel(1)
 }
 
-const (
-	tileEmpty = '0' + iota
-	tileFloor
-	tilePlain
-	tileWallR
-	tileWallE
-	tileCeiling
-	tileBall
-)
-
 func loadTiles() map[rune]sprite.SubTex {
 	t := fsm.MustLoadTexture(eng, "tiles.png")
 	return map[rune]sprite.SubTex{
-		tileEmpty: sprite.SubTex{},
 		tileFloor: fsm.SubTex(t, 32, 32, 64, 64),
 		tilePlain: fsm.SubTex(t, 32, 64, 64, 96),
 		tileBall:  fsm.SubTex(t, 96, 0, 128, 32),

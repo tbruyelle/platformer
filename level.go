@@ -8,13 +8,27 @@ import (
 	"strings"
 
 	"golang.org/x/mobile/app"
+	"golang.org/x/mobile/sprite/clock"
+)
+
+const (
+	tileFloor = '1' + iota
+	tilePlain
+	tileWallR
+	tileWallE
+	tileCeiling
+	tileBall
+	tileMax
+
+	tilePlayer = 'P'
 )
 
 type level struct {
 	fsm.Object
-	num   int
-	tiles [][]rune
-	objs  [][]*fsm.Object
+	num              int
+	tiles            [][]rune
+	objs             [][]*fsm.Object
+	playerx, playery int
 }
 
 func loadLevel(num int) *level {
@@ -42,6 +56,19 @@ func loadLevel(num int) *level {
 		l.tiles[i] = make([]rune, len(line))
 		for j, c := range line {
 			l.tiles[i][j] = c
+			if c == tilePlayer {
+				// Found where the player starts
+				player = &fsm.Object{
+					X:      float32(j * 32),
+					Y:      float32(i * 32),
+					Width:  32,
+					Height: 32,
+					Sprite: tiles[tileBall],
+				}
+				player.Register(scene, eng)
+				l.playerx = i
+				l.playery = j
+			}
 		}
 	}
 	// create the objects from the tiles
@@ -56,10 +83,13 @@ func loadLevel(num int) *level {
 				Width:  32,
 				Height: 32,
 				Sprite: tiles[tile],
-				Dead:   tile == tileEmpty,
+				Dead:   tile >= tileMax,
 			}
 			o.Register(&l.Object, eng)
 		}
 	}
 	return l
+}
+
+func followPlayer(o *fsm.Object, t clock.Time) {
 }
