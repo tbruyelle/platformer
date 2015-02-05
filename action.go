@@ -11,7 +11,7 @@ type moveTo struct {
 }
 
 const (
-	playerSpeed = 5
+	playerSpeed = 10
 )
 
 func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
