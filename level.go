@@ -11,14 +11,23 @@ import (
 )
 
 type level struct {
+	fsm.Object
 	num   int
 	tiles [][]rune
 	objs  [][]*fsm.Object
-	node  *fsm.Object
 }
 
 func loadLevel(num int) *level {
-	l := &level{num: num}
+	l := &level{
+		num: num,
+		Object: fsm.Object{
+			X:      0,
+			Y:      0,
+			Width:  1,
+			Height: 1,
+		},
+	}
+
 	f, err := app.Open(fmt.Sprintf("%d.tiles", num))
 	if err != nil {
 		log.Fatal(err)
@@ -36,8 +45,7 @@ func loadLevel(num int) *level {
 		}
 	}
 	// create the objects from the tiles
-	l.node = &fsm.Object{X: 0, Y: 0, Width: float32(len(l.tiles[0])*32 + 2), Height: float32(len(l.tiles)*32 + 2)}
-	l.node.Register(nil, eng)
+	l.Register(nil, eng)
 	l.objs = make([][]*fsm.Object, len(l.tiles))
 	for i, line := range l.tiles {
 		l.objs[i] = make([]*fsm.Object, len(line))
@@ -50,7 +58,7 @@ func loadLevel(num int) *level {
 				Sprite: tiles[tile],
 				Dead:   tile == tileEmpty,
 			}
-			o.Register(l.node, eng)
+			o.Register(&l.Object, eng)
 		}
 	}
 	return l
