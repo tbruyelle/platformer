@@ -29,6 +29,7 @@ type level struct {
 	tiles            [][]rune
 	objs             [][]*fsm.Object
 	playerx, playery int
+	width, height    float32
 }
 
 func loadLevel(num int) *level {
@@ -72,6 +73,9 @@ func loadLevel(num int) *level {
 			}
 		}
 	}
+	l.width = len(l.tiles) * 32
+	l.height = len(l.tiles[0]) * 32
+
 	// create the objects from the tiles
 	l.Register(scene, eng)
 	l.objs = make([][]*fsm.Object, len(l.tiles))
