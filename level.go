@@ -73,7 +73,7 @@ func loadLevel(num int) *level {
 		}
 	}
 	// create the objects from the tiles
-	l.Register(nil, eng)
+	l.Register(scene, eng)
 	l.objs = make([][]*fsm.Object, len(l.tiles))
 	for i, line := range l.tiles {
 		l.objs[i] = make([]*fsm.Object, len(line))

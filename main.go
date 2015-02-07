@@ -70,7 +70,6 @@ func draw() {
 	// test collisions
 
 	eng.Render(scene.Node, now)
-	eng.Render(lvl.Node, now)
 	debug.DrawFPS()
 }
 
