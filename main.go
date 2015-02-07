@@ -77,8 +77,8 @@ func draw() {
 
 func touch(t event.Touch) {
 	if t.Type == event.TouchEnd {
-		player.Time = 0
-		player.Action = &moveTo{x: float32(t.Loc.X), y: float32(t.Loc.Y)}
+		lvl.Time = 0
+		lvl.Action = &moveTo{x: float32(t.Loc.X), y: float32(t.Loc.Y)}
 	}
 }
 
