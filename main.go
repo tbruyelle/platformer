@@ -33,12 +33,14 @@ var (
 	start     = time.Now()
 	lastClock = clock.Time(-1)
 
-	eng    = glsprite.Engine()
-	scene  *fsm.Object
-	tiles  map[rune]sprite.SubTex
-	objs   Objs
-	lvl    *level
-	player *fsm.Object
+	eng                      = glsprite.Engine()
+	scene                    *fsm.Object
+	tiles                    map[rune]sprite.SubTex
+	objs                     Objs
+	lvl                      *level
+	player                   *fsm.Object
+	screenW, screenH         float32
+	screenHalfW, screenHalfH float32
 )
 
 func main() {
@@ -88,10 +90,14 @@ func loadScene() {
 	scene = &fsm.Object{Width: 1, Height: 1}
 	scene.Register(nil, eng)
 
+	// Screen dimensions
+	screenW, screenH = float32(geom.Width), float32(geom.Height)
+	screenHalfW, screenHalfH = screenW/2, screenH/2
+
 	// Background
 	bg := &fsm.Object{
-		Width:  float32(geom.Width),
-		Height: float32(geom.Height),
+		Width:  screenW,
+		Height: screenH,
 	}
 	log.Println("Window", bg.Width, bg.Height)
 	bg.Register(scene, eng)

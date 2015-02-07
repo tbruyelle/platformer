@@ -24,21 +24,16 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 		// Normalize vector
 		a.v.Normalize()
 	}
-	f := clock.EaseIn(o.Time, o.Time+10, t)
-	o.Vx, o.Vy = a.v.X*playerSpeed*f, a.v.Y*playerSpeed*f
 	// Check if the goal is reached
 	if fsm.NewVector(o.X, o.Y, a.x, a.y).Length() <= playerSpeed {
 		// move over
 		o.Reset()
 		o.Action = nil
+		return
 	}
+	f := clock.EaseIn(o.Time, o.Time+10, t)
+	o.Vx, o.Vy = a.v.X*playerSpeed*f, a.v.Y*playerSpeed*f
 
-}
-
-func followPlayer(o *fsm.Object, t clock.Time) {
-	if o.Time == 0 {
-		o.Time = t
-	}
-	f := clock.Linear(o.Time, o.Time+50, t)
-	o.Tx = -100 * f
+	lvl.playerX, lvl.playerY = o.Vx+o.X, o.Vy+o.Y
+	lvl.playerMove()
 }
