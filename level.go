@@ -28,7 +28,7 @@ type level struct {
 	num        int
 	tiles      [][]rune
 	objs       [][]*fsm.Object
-	maxX, maxY float32
+	minX, minY float32
 }
 
 func loadLevel(num int) *level {
@@ -69,9 +69,9 @@ func loadLevel(num int) *level {
 			}
 		}
 	}
-	l.maxX = float32(len(l.tiles[0])*32) - screenW
-	l.maxY = float32(len(l.tiles)*32) - screenH
-	log.Println("level max", l.maxX, l.maxY)
+	l.minX = -float32(len(l.tiles[0])*32) + screenW
+	l.minY = -float32(len(l.tiles)*32) + screenH
+	log.Println("level min", l.minX, l.minY)
 
 	// create the objects from the tiles
 	l.Register(scene, eng)
@@ -100,16 +100,16 @@ func loadLevel(num int) *level {
 //	switch {
 //	case x < screenHalfW:
 //		l.X = 0
-//	case x > l.maxX-screenHalfW:
-//		l.X = -l.maxX + screenW
+//	case x > l.minX-screenHalfW:
+//		l.X = -l.minX + screenW
 //	default:
 //		l.X = -x + screenHalfW
 //	}
 //	switch {
 //	case y < screenHalfH:
 //		l.Y = 0
-//	case y > l.maxY-screenHalfH:
-//		l.Y = -l.maxY + screenH
+//	case y > l.minY-screenHalfH:
+//		l.Y = -l.minY + screenH
 //	default:
 //		l.Y = -y + screenHalfH
 //	}

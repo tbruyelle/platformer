@@ -32,9 +32,9 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 	v := fsm.NewVector(player.X-lvl.X, player.Y-lvl.Y, a.x, a.y)
 	l := v.Length()
 	log.Println("lvl", lvl.X, lvl.Y)
-	log.Println("player", player.X, player.Y)
-	log.Println("v", v.X, a.v.Y, l)
-	log.Println("-------")
+	//log.Println("player", player.X, player.Y)
+	//log.Println("v", v.X, a.v.Y, l)
+	//log.Println("-------")
 	if l <= playerSpeed {
 		// move over
 		log.Println("move over")
@@ -54,10 +54,10 @@ func scroll(vx, vy float32) {
 		// level coordinates should never be positives
 		player.X = player.X - lvl.X + vx
 		lvl.X = 0
-	case lvl.X-vx < -lvl.maxX:
-		// should never be lower than the level maxs
-		player.X = player.X + lvl.X + vx - lvl.maxX
-		lvl.X = lvl.maxX
+	case lvl.X-vx < lvl.minX:
+		// should never be lower than the level mins
+		player.X = player.X + vx - lvl.X + lvl.minX
+		lvl.X = lvl.minX
 	default:
 		lvl.X -= vx
 	}
@@ -66,10 +66,10 @@ func scroll(vx, vy float32) {
 		// level coordinates should never be positives
 		player.Y = player.Y - lvl.Y + vy
 		lvl.Y = 0
-	case lvl.Y-vy < -lvl.maxY:
-		// should never be lower than the level maxs
-		player.Y = player.Y + lvl.Y + vy - lvl.maxY
-		lvl.Y = lvl.maxY
+	case lvl.Y-vy < lvl.minY:
+		// should never be lower than the level mins
+		player.Y = player.Y + vy - lvl.Y + lvl.minY
+		lvl.Y = lvl.minY
 	default:
 		lvl.Y -= vy
 	}
