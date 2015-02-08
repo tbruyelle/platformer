@@ -50,8 +50,10 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 func scroll(vx, vy float32) {
 	dx, dy := lvl.X-vx, lvl.Y-vy
 	log.Println("dx,dy", dx, dy)
+	pdx, pdy := screenHalfW-player.X, screenHalfH-player.Y
+	log.Println("pdx,pdy", pdx, pdy)
 	switch {
-	case dx > 0 || player.X < screenHalfW:
+	case dx > 0 || pdx > 0:
 		// level coordinates should never be positives
 		player.X -= dx
 		lvl.X = 0
@@ -65,7 +67,7 @@ func scroll(vx, vy float32) {
 		lvl.X -= vx
 	}
 	switch {
-	case dy > 0 || player.Y < screenHalfH:
+	case dy > 0 || pdy > 0:
 		// level coordinates should never be positives
 		player.Y -= dy
 		lvl.Y = 0
