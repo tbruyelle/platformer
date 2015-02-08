@@ -18,18 +18,23 @@ const (
 func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 	if o.Time == 0 {
 		o.Time = t
-		// Fix x,y to match the player dimension
+		// Fix target x,y to match player x,y
 		a.x, a.y = a.x-player.Width/2, a.y-player.Height/2
 		// Compute vector to direction
 		a.v = fsm.NewVector(a.x, a.y, player.X, player.Y)
-		// Compute goal for top-left level
-		a.x, a.y = lvl.X+a.v.X, lvl.Y+a.v.Y
 		// Normalize vector
 		a.v.Normalize()
+		// Turn target x,y to level plan
+		a.x, a.y = a.x-lvl.X, a.y-lvl.Y
 		return
 	}
 	// Check if the goal is reached
-	l := fsm.NewVector(a.x, a.y, o.X, o.Y).Length()
+	v := fsm.NewVector(player.X-lvl.X, player.Y-lvl.Y, a.x, a.y)
+	l := v.Length()
+	log.Println("lvl", lvl.X, lvl.Y)
+	log.Println("player", player.X, player.Y)
+	log.Println("v", v.X, a.v.Y, l)
+	log.Println("-------")
 	if l <= playerSpeed {
 		// move over
 		log.Println("move over")
@@ -42,18 +47,26 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 	// Where to apply those values ?
 	switch {
 	case o.X+vx > 0:
-		log.Println("min")
 		// level coordinates should never be positives
 		player.X = player.X - o.X - vx
 		o.X = 0
 	case o.X+vx < -lvl.maxX-screenW:
-		log.Println("maxX")
 		// should never be lower than the level maxs
 		player.X = player.X + o.X - vx - lvl.maxX - screenW
 		o.X = lvl.maxX - screenW
 	default:
-		log.Println("default")
 		o.X += vx
 	}
-	o.Y += vy
+	switch {
+	case o.Y+vy > 0:
+		// level coordinates should never be positives
+		player.Y = player.Y - o.Y - vy
+		o.Y = 0
+	case o.Y+vy < -lvl.maxY-screenH:
+		// should never be lower than the level maxs
+		player.Y = player.Y + o.Y - vy - lvl.maxY - screenH
+		o.Y = lvl.maxY - screenH
+	default:
+		o.Y += vy
+	}
 }
