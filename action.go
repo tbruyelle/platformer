@@ -48,27 +48,30 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 }
 
 func scroll(vx, vy float32) {
-	// Where to apply those values ?
+	dx, dy := lvl.X-vx, lvl.Y-vy
+	log.Println("dx,dy", dx, dy)
 	switch {
-	case lvl.X-vx > 0 || player.X < screenHalfW:
+	case dx > 0 || player.X < screenHalfW:
 		// level coordinates should never be positives
-		player.X = player.X - lvl.X + vx
+		player.X -= dx
 		lvl.X = 0
-	case lvl.X-vx < lvl.minX:
+		log.Println("dx>0", player.X, lvl.X)
+	case dx < lvl.minX:
 		// should never be lower than the level mins
-		player.X = player.X + vx - lvl.X + lvl.minX
+		player.X += -dx + lvl.minX
 		lvl.X = lvl.minX
+		log.Println("dx<", lvl.minX, player.X, lvl.X)
 	default:
 		lvl.X -= vx
 	}
 	switch {
-	case lvl.Y-vy > 0 || player.Y < screenHalfH:
+	case dy > 0 || player.Y < screenHalfH:
 		// level coordinates should never be positives
-		player.Y = player.Y - lvl.Y + vy
+		player.Y -= dy
 		lvl.Y = 0
-	case lvl.Y-vy < lvl.minY:
+	case dy < lvl.minY:
 		// should never be lower than the level mins
-		player.Y = player.Y + vy - lvl.Y + lvl.minY
+		player.Y += -dy + lvl.minY
 		lvl.Y = lvl.minY
 	default:
 		lvl.Y -= vy
