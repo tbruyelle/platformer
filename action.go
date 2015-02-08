@@ -38,5 +38,22 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 		return
 	}
 	f := clock.EaseIn(o.Time, o.Time+10, t)
-	o.Vx, o.Vy = a.v.X*playerSpeed*f, a.v.Y*playerSpeed*f
+	vx, vy := a.v.X*playerSpeed*f, a.v.Y*playerSpeed*f
+	// Where to apply those values ?
+	switch {
+	case o.X+vx > 0:
+		log.Println("min")
+		// level coordinates should never be positives
+		player.X = player.X - o.X - vx
+		o.X = 0
+	case o.X+vx < -lvl.maxX-screenW:
+		log.Println("maxX")
+		// should never be lower than the level maxs
+		player.X = player.X + o.X - vx - lvl.maxX - screenW
+		o.X = lvl.maxX - screenW
+	default:
+		log.Println("default")
+		o.X += vx
+	}
+	o.Y += vy
 }
