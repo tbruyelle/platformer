@@ -6,10 +6,15 @@ import (
 	"testing"
 )
 
-func TestScrollLevelForward(t *testing.T) {
+func init() {
 	lvl = &level{minX: -300, minY: -300}
 	screenW = 200
 	screenH = 200
+	screenHalfW = screenW / 2
+	screenHalfH = screenH / 2
+}
+
+func TestScrollForwardFromStart(t *testing.T) {
 	player = &fsm.Object{X: 100, Y: 100}
 
 	scroll(10, 10)
@@ -20,11 +25,8 @@ func TestScrollLevelForward(t *testing.T) {
 	assert.Equal(t, 100, player.Y)
 }
 
-func TestScrollLevelBackward(t *testing.T) {
-	lvl = &level{minX: -300, minY: -300}
+func TestScrollBackwardFrom20(t *testing.T) {
 	lvl.X, lvl.Y = -20, -20
-	screenW = 200
-	screenH = 200
 	player = &fsm.Object{X: 100, Y: 100}
 
 	scroll(-10, -10)
@@ -35,11 +37,8 @@ func TestScrollLevelBackward(t *testing.T) {
 	assert.Equal(t, 100, player.Y)
 }
 
-func TestScrollPlayerForward(t *testing.T) {
-	lvl = &level{minX: -300, minY: -300}
+func TestScrollForwardFromEnd(t *testing.T) {
 	lvl.X, lvl.Y = -300, -300
-	screenW = 200
-	screenH = 200
 	player = &fsm.Object{X: 100, Y: 100}
 
 	scroll(10, 10)
@@ -50,10 +49,7 @@ func TestScrollPlayerForward(t *testing.T) {
 	assert.Equal(t, 110, player.Y)
 }
 
-func TestScrollPlayerBackward(t *testing.T) {
-	lvl = &level{minX: -300, minY: -300}
-	screenW = 200
-	screenH = 200
+func TestScrollBackwardFromStart(t *testing.T) {
 	player = &fsm.Object{X: 100, Y: 100}
 
 	scroll(-10, -10)
@@ -64,11 +60,8 @@ func TestScrollPlayerBackward(t *testing.T) {
 	assert.Equal(t, 90, player.Y)
 }
 
-func TestScrollLevelPlayerForward(t *testing.T) {
-	lvl = &level{minX: -300, minY: -300}
+func TestScrollForwardFromNearEnd(t *testing.T) {
 	lvl.X, lvl.Y = -295, -295
-	screenW = 200
-	screenH = 200
 	player = &fsm.Object{X: 100, Y: 100}
 
 	scroll(10, 10)
@@ -79,11 +72,8 @@ func TestScrollLevelPlayerForward(t *testing.T) {
 	assert.Equal(t, 105, player.Y)
 }
 
-func TestScrollLevelPlayerBackward(t *testing.T) {
-	lvl = &level{minX: -300, minY: -300}
+func TestScrollBackwardFromNearStart(t *testing.T) {
 	lvl.X, lvl.Y = -5, -5
-	screenW = 200
-	screenH = 200
 	player = &fsm.Object{X: 100, Y: 100}
 
 	scroll(-10, -10)
@@ -92,4 +82,27 @@ func TestScrollLevelPlayerBackward(t *testing.T) {
 	assert.Equal(t, 0, lvl.Y)
 	assert.Equal(t, 95, player.X)
 	assert.Equal(t, 95, player.Y)
+}
+
+func TestScrollForwardFromNearStart(t *testing.T) {
+	player = &fsm.Object{X: 95, Y: 95}
+
+	scroll(10, 10)
+
+	assert.Equal(t, -5, lvl.X)
+	assert.Equal(t, -5, lvl.Y)
+	assert.Equal(t, 100, player.X)
+	assert.Equal(t, 100, player.Y)
+}
+
+func TestScrollBackwardFromNearEnd(t *testing.T) {
+	lvl.X, lvl.Y = -300, -300
+	player = &fsm.Object{X: 105, Y: 105}
+
+	scroll(-10, -10)
+
+	assert.Equal(t, -295, lvl.X)
+	assert.Equal(t, -295, lvl.Y)
+	assert.Equal(t, 100, player.X)
+	assert.Equal(t, 100, player.Y)
 }
