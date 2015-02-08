@@ -25,11 +25,10 @@ const (
 
 type level struct {
 	fsm.Object
-	num              int
-	tiles            [][]rune
-	objs             [][]*fsm.Object
-	playerX, playerY float32
-	maxX, maxY       float32
+	num        int
+	tiles      [][]rune
+	objs       [][]*fsm.Object
+	maxX, maxY float32
 }
 
 func loadLevel(num int) *level {
@@ -67,13 +66,11 @@ func loadLevel(num int) *level {
 					Sprite: tiles[tileBall],
 				}
 				player.Register(scene, eng)
-				l.playerX, l.playerY = float32(j*32), float32(i*32)
 			}
 		}
 	}
-	l.maxX = float32(len(l.tiles[0]) * 32)
-	l.maxY = float32(len(l.tiles) * 32)
-	l.playerMove()
+	l.maxX = float32(len(l.tiles[0])*32) - screenW
+	l.maxY = float32(len(l.tiles)*32) - screenH
 	log.Println("level max", l.maxX, l.maxY)
 
 	// create the objects from the tiles
@@ -96,24 +93,24 @@ func loadLevel(num int) *level {
 	return l
 }
 
-func (l *level) playerMove() {
-	x := l.playerX
-	y := l.playerY
-
-	switch {
-	case x < screenHalfW:
-		l.X = 0
-	case x > l.maxX-screenHalfW:
-		l.X = -l.maxX + screenW
-	default:
-		l.X = -x + screenHalfW
-	}
-	switch {
-	case y < screenHalfH:
-		l.Y = 0
-	case y > l.maxY-screenHalfH:
-		l.Y = -l.maxY + screenH
-	default:
-		l.Y = -y + screenHalfH
-	}
-}
+//func (l *level) playerMove() {
+//	x := l.playerX
+//	y := l.playerY
+//
+//	switch {
+//	case x < screenHalfW:
+//		l.X = 0
+//	case x > l.maxX-screenHalfW:
+//		l.X = -l.maxX + screenW
+//	default:
+//		l.X = -x + screenHalfW
+//	}
+//	switch {
+//	case y < screenHalfH:
+//		l.Y = 0
+//	case y > l.maxY-screenHalfH:
+//		l.Y = -l.maxY + screenH
+//	default:
+//		l.Y = -y + screenHalfH
+//	}
+//}
