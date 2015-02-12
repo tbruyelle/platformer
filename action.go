@@ -53,43 +53,78 @@ func scroll(vx, vy float32) {
 	pdx, pdy := screenHalfW-player.X, screenHalfH-player.Y
 	log.Println("pdx,pdy", pdx, pdy)
 	switch {
-
 	case vx < 0:
 		// scroll left
-		if dx > 0 {
+		switch {
+		case dx > 0:
+			/// left limit is reached
 			lvl.X = 0
 			player.X -= dx
-		} else {
+		case pdx != 0:
+			// player is not centered
+			if pdx < vx {
+				player.X += vx
+			} else {
+				player.X = screenHalfW
+				lvl.X += (pdx - vx)
+			}
+		default:
 			lvl.X = dx
 		}
 	case vx > 0:
 		// scroll right
-		if dx < lvl.minX {
+		switch {
+		case dx < lvl.minX:
+			// right limit is reached
 			lvl.X = lvl.minX
-			//if pdx > 0 {
-			//	player.X += -dx + pdx
-			//} else {
 			player.X += -dx + lvl.minX
-			//}
-		} else {
+		case pdx != 0:
+			// player is not centered
+			if pdx > vx {
+				player.X += vx
+			} else {
+				player.X = screenHalfW
+				lvl.X -= (pdx - vx)
+			}
+		default:
 			lvl.X = dx
 		}
 	}
 	switch {
 	case vy < 0:
 		// scroll up
-		if dy > 0 {
+		switch {
+		case dy > 0:
+			// UP limit is reached
 			lvl.Y = 0
 			player.Y -= dy
-		} else {
+		case pdy != 0:
+			// player is not centered
+			if pdy < vy {
+				player.Y += vy
+			} else {
+				player.Y = screenHalfH
+				lvl.Y += (pdy - vy)
+			}
+		default:
 			lvl.Y = dy
 		}
 	case vy > 0:
 		// scroll down
-		if dy < lvl.minY {
-			player.Y += -dy + lvl.minY
+		switch {
+		case dy < lvl.minY:
+			// down limit is reached
 			lvl.Y = lvl.minY
-		} else {
+			player.Y += -dy + lvl.minY
+		case pdy != 0:
+			// player is not centered
+			if pdy > vy {
+				player.Y += vy
+			} else {
+				player.Y = screenHalfH
+				lvl.Y -= (pdy - vy)
+			}
+		default:
 			lvl.Y = dy
 		}
 	}
