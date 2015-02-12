@@ -53,29 +53,44 @@ func scroll(vx, vy float32) {
 	pdx, pdy := screenHalfW-player.X, screenHalfH-player.Y
 	log.Println("pdx,pdy", pdx, pdy)
 	switch {
-	case dx > 0 || pdx > 0:
-		// level coordinates should never be positives
-		player.X -= dx
-		lvl.X = 0
-		log.Println("dx>0", player.X, lvl.X)
-	case dx < lvl.minX:
-		// should never be lower than the level mins
-		player.X += -dx + lvl.minX
-		lvl.X = lvl.minX
-		log.Println("dx<", lvl.minX, player.X, lvl.X)
-	default:
-		lvl.X -= vx
+
+	case vx < 0:
+		// scroll left
+		if dx > 0 {
+			lvl.X = 0
+			player.X -= dx
+		} else {
+			lvl.X = dx
+		}
+	case vx > 0:
+		// scroll right
+		if dx < lvl.minX {
+			lvl.X = lvl.minX
+			//if pdx > 0 {
+			//	player.X += -dx + pdx
+			//} else {
+			player.X += -dx + lvl.minX
+			//}
+		} else {
+			lvl.X = dx
+		}
 	}
 	switch {
-	case dy > 0 || pdy > 0:
-		// level coordinates should never be positives
-		player.Y -= dy
-		lvl.Y = 0
-	case dy < lvl.minY:
-		// should never be lower than the level mins
-		player.Y += -dy + lvl.minY
-		lvl.Y = lvl.minY
-	default:
-		lvl.Y -= vy
+	case vy < 0:
+		// scroll up
+		if dy > 0 {
+			lvl.Y = 0
+			player.Y -= dy
+		} else {
+			lvl.Y = dy
+		}
+	case vy > 0:
+		// scroll down
+		if dy < lvl.minY {
+			player.Y += -dy + lvl.minY
+			lvl.Y = lvl.minY
+		} else {
+			lvl.Y = dy
+		}
 	}
 }
