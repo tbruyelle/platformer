@@ -17,6 +17,7 @@ const (
 
 func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 	if o.Time == 0 {
+		log.Println("Move to ", a.x, a.y)
 		o.Time = t
 		// Fix target x,y to match player x,y
 		a.x, a.y = a.x-player.Width/2, a.y-player.Height/2
@@ -31,7 +32,7 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 	// Check if the goal is reached
 	v := fsm.NewVector(player.X-lvl.X, player.Y-lvl.Y, a.x, a.y)
 	l := v.Length()
-	log.Println("lvl", lvl.X, lvl.Y)
+	//log.Println("lvl", lvl.X, lvl.Y)
 	//log.Println("player", player.X, player.Y)
 	//log.Println("v", v.X, a.v.Y, l)
 	//log.Println("-------")
@@ -49,9 +50,9 @@ func (a *moveTo) Do(o *fsm.Object, t clock.Time) {
 
 func scroll(vx, vy float32) {
 	dx, dy := lvl.X-vx, lvl.Y-vy
-	log.Println("dx,dy", dx, dy)
+	//log.Println("dx,dy", dx, dy)
 	pdx, pdy := screenHalfW-player.X, screenHalfH-player.Y
-	log.Println("pdx,pdy", pdx, pdy)
+	//log.Println("pdx,pdy", pdx, pdy)
 	switch {
 	case vx < 0:
 		// scroll left
@@ -84,7 +85,7 @@ func scroll(vx, vy float32) {
 				player.X += vx
 			} else {
 				player.X = screenHalfW
-				lvl.X -= (pdx - vx)
+				lvl.X += (pdx - vx)
 			}
 		default:
 			lvl.X = dx
@@ -122,7 +123,7 @@ func scroll(vx, vy float32) {
 				player.Y += vy
 			} else {
 				player.Y = screenHalfH
-				lvl.Y -= (pdy - vy)
+				lvl.Y += (pdy - vy)
 			}
 		default:
 			lvl.Y = dy
