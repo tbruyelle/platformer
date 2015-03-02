@@ -30,7 +30,7 @@ func (a Objs) Remove(i int) Objs {
 }
 
 var (
-	start     = time.Now()
+	startTime = time.Now()
 	lastClock = clock.Time(-1)
 
 	eng                      = glsprite.Engine()
@@ -45,7 +45,7 @@ var (
 
 func main() {
 	app.Run(app.Callbacks{
-		Start: loadScene,
+		Start: start,
 		Draw:  draw,
 		Touch: touch,
 	})
@@ -54,10 +54,9 @@ func main() {
 func draw() {
 	// Keep until golang.org/x/mogile/x11.go handle Start callback
 	if scene == nil {
-		loadScene()
+		start()
 	}
-
-	now := clock.Time(time.Since(start) * 60 / time.Second)
+	now := clock.Time(time.Since(startTime) * 60 / time.Second)
 	if now == lastClock {
 		// TODO: figure out how to limit draw callbacks to 60Hz instead of
 		// burning the CPU as fast as possible.
@@ -82,7 +81,7 @@ func touch(t event.Touch) {
 	}
 }
 
-func loadScene() {
+func start() {
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
