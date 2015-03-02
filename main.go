@@ -45,7 +45,7 @@ var (
 
 func main() {
 	app.Run(app.Callbacks{
-		Start: start,
+		//Start: start,
 		Draw:  draw,
 		Touch: touch,
 	})
